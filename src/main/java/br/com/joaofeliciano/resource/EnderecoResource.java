@@ -3,8 +3,8 @@ package br.com.joaofeliciano.resource;
 import java.util.List;
 import java.util.Optional;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -24,7 +24,7 @@ import br.com.joaofeliciano.event.RecursoCriadoEvent;
 import br.com.joaofeliciano.model.Endereco;
 import br.com.joaofeliciano.repository.EnderecoRepository;
 import br.com.joaofeliciano.service.EnderecoService;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 @RequestMapping("/endereco")
@@ -39,26 +39,26 @@ public class EnderecoResource {
 	@Autowired
 	private ApplicationEventPublisher publisher;
 	
-	@ApiOperation(
-			value="Consultar enderecos", 
-			notes="Essa operação lista todos os enderecos cadastrados.")
+	@Operation(
+			summary="Consultar enderecos",
+			description="Essa operação lista todos os enderecos cadastrados.")
 	@GetMapping
 	public List<Endereco> listar() {
 		return enderecoRepository.findAll();
 	}
 
-	@ApiOperation(
-			value="Consultar endereco", 
-			notes="Essa operação consulta endereco pelo codigo informado.")
+	@Operation(
+			summary="Consultar endereco",
+			description="Essa operação consulta endereco pelo codigo informado.")
 	@GetMapping("/{codigo}")
 	public ResponseEntity<Endereco> buscarByCodigo(@PathVariable Long codigo) {
 		Optional<Endereco> endereco = enderecoRepository.findById(codigo);
 		return endereco.isPresent() ? ResponseEntity.ok(endereco.get()) : ResponseEntity.notFound().build();
 	}
 	
-	@ApiOperation(
-			value="Cadastrar endereco", 
-			notes="Essa operação cadastra enderecos.")
+	@Operation(
+			summary="Cadastrar endereco",
+			description="Essa operação cadastra enderecos.")
 	@PostMapping
 	public ResponseEntity<Endereco> criar(@Valid @RequestBody Endereco enderecoParametro, 
 			HttpServletResponse httpServletResponse) {
@@ -75,9 +75,9 @@ public class EnderecoResource {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 	}
 	
-	@ApiOperation(
-			value="Excluir endereco", 
-			notes="Essa operação exclui enderecos.")
+	@Operation(
+			summary="Excluir endereco",
+			description="Essa operação exclui enderecos.")
 	@DeleteMapping("/{codigo}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public ResponseEntity remover(@PathVariable Long codigo) {
@@ -92,9 +92,9 @@ public class EnderecoResource {
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 	
-	@ApiOperation(
-			value="Atualizar endereco", 
-			notes="Essa operação atualiza enderecos.")
+	@Operation(
+			summary="Atualizar endereco",
+			description="Essa operação atualiza enderecos.")
 	@PutMapping("/{codigo}")
 	public ResponseEntity<Endereco> atualizar(@PathVariable Long codigo, @Valid @RequestBody Endereco enderecoParametro) {
 		try {

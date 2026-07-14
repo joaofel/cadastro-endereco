@@ -1,6 +1,6 @@
 package br.com.joaofeliciano.event;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.context.ApplicationEvent;
 

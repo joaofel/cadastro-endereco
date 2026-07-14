@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.joaofeliciano.model.Usuario;
 import br.com.joaofeliciano.repository.UsuarioRepository;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 @RequestMapping("/usuario")
@@ -21,17 +21,17 @@ public class UsuarioResource {
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 	
-	@ApiOperation(
-			value="Consultar usuarios", 
-			notes="Essa operação lista todos os usuarios cadastrados.")
+	@Operation(
+			summary="Consultar usuarios",
+			description="Essa operação lista todos os usuarios cadastrados.")
 	@GetMapping
 	public List<Usuario> listar() {
 		return usuarioRepository.findAll();
 	}
 	
-	@ApiOperation(
-			value="Consultar usuario", 
-			notes="Essa operação consulta usuario pelo codigo informado.")
+	@Operation(
+			summary="Consultar usuario",
+			description="Essa operação consulta usuario pelo codigo informado.")
 	@GetMapping("/{codigo}")
 	public ResponseEntity<Usuario> buscarByCodigo(@PathVariable Long codigo) {
 		Optional<Usuario> usuario = usuarioRepository.findById(codigo);

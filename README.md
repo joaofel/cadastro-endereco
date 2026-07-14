@@ -6,11 +6,12 @@ Ao executar o projeto, acessar o end-point: /swagger-ui.html
 
 Foi criado aplicação com as tecnologias:
 
-- JAVA EE 8;
-- Spring Boot;
+- Java 21 (Jakarta EE);
+- Spring Boot 4;
 - Spring MVC;
 - Spring JPA
 - MySQL
+- springdoc-openapi (Swagger UI)
 
 Foi escolhido essas tecnologias pela agilidade no desenvolvimento, assim como a facilidade na leitura do codigo e manutencao.
 Com poucas linhas de codigo é possivel desenvolver um WebService funcional, seguindo os padros MVC.
