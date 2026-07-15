@@ -1,11 +1,9 @@
 package br.com.joaofeliciano.exceptionhandler;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -25,9 +23,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 public class CadastroEnderecoExceptionHandler extends ResponseEntityExceptionHandler{
-	
-	@Autowired
-	private MessageSource messageSource;
+
+	private final MessageSource messageSource;
+
+	public CadastroEnderecoExceptionHandler(MessageSource messageSource) {
+		this.messageSource = messageSource;
+	}
 
 	@Override
 	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
@@ -38,7 +39,7 @@ public class CadastroEnderecoExceptionHandler extends ResponseEntityExceptionHan
 		
 		String mensagemDesenvolvedor = ex.getCause() != null ? ex.getCause().toString() : ex.toString();
 		
-		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
+		List<Erro> erros = List.of(new Erro(mensagemUsuario, mensagemDesenvolvedor));
 		
 		return handleExceptionInternal(ex, erros, headers, HttpStatus.BAD_REQUEST, request);
 	}
@@ -52,7 +53,7 @@ public class CadastroEnderecoExceptionHandler extends ResponseEntityExceptionHan
 		
 		String mensagemDesenvolvedor = ex.toString();
 		
-		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
+		List<Erro> erros = List.of(new Erro(mensagemUsuario, mensagemDesenvolvedor));
 		
 		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
 	}
@@ -89,7 +90,7 @@ public class CadastroEnderecoExceptionHandler extends ResponseEntityExceptionHan
 		
 		String mensagemDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);
 		
-		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
+		List<Erro> erros = List.of(new Erro(mensagemUsuario, mensagemDesenvolvedor));
 		
 		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 }

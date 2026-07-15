@@ -5,7 +5,6 @@ import java.util.List;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,15 +27,19 @@ import io.swagger.v3.oas.annotations.Operation;
 @RequestMapping("/endereco")
 public class EnderecoResource {
 	
-	@Autowired
-	private EnderecoRepository enderecoRepository;
-	
-	@Autowired
-	private EnderecoService enderecoService;
-	
-	@Autowired
-	private ApplicationEventPublisher publisher;
-	
+	private final EnderecoRepository enderecoRepository;
+
+	private final EnderecoService enderecoService;
+
+	private final ApplicationEventPublisher publisher;
+
+	public EnderecoResource(EnderecoRepository enderecoRepository, EnderecoService enderecoService,
+			ApplicationEventPublisher publisher) {
+		this.enderecoRepository = enderecoRepository;
+		this.enderecoService = enderecoService;
+		this.publisher = publisher;
+	}
+
 	@Operation(
 			summary="Consultar enderecos",
 			description="Essa operação lista todos os enderecos cadastrados.")
