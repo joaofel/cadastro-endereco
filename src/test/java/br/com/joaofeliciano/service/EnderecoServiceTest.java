@@ -50,8 +50,10 @@ class EnderecoServiceTest {
 		Endereco resultado = enderecoService.atualizar(1L, parametro);
 
 		assertThat(resultado).isNotNull();
+		// deve persistir a entidade existente (preservando o codigo), nao o parametro
+		assertThat(resultado.getCodigo()).isEqualTo(1L);
 		assertThat(resultado.getRua()).isEqualTo("Rua Nova");
-		verify(enderecoRepository).save(parametro);
+		verify(enderecoRepository).save(existente);
 	}
 
 	@Test

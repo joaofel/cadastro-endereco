@@ -1,7 +1,6 @@
 package br.com.joaofeliciano.resource;
 
 import java.util.List;
-import java.util.Optional;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.joaofeliciano.event.RecursoCriadoEvent;
@@ -52,8 +50,9 @@ public class EnderecoResource {
 			description="Essa operação consulta endereco pelo codigo informado.")
 	@GetMapping("/{codigo}")
 	public ResponseEntity<Endereco> buscarByCodigo(@PathVariable Long codigo) {
-		Optional<Endereco> endereco = enderecoRepository.findById(codigo);
-		return endereco.isPresent() ? ResponseEntity.ok(endereco.get()) : ResponseEntity.notFound().build();
+		return enderecoRepository.findById(codigo)
+				.map(ResponseEntity::ok)
+				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 	
 	@Operation(
@@ -79,17 +78,14 @@ public class EnderecoResource {
 			summary="Excluir endereco",
 			description="Essa operação exclui enderecos.")
 	@DeleteMapping("/{codigo}")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public ResponseEntity remover(@PathVariable Long codigo) {
-		
-		Optional<Endereco> endereco = enderecoRepository.findById(codigo);
-		
-		if(!endereco.isPresent()) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+	public ResponseEntity<Void> remover(@PathVariable Long codigo) {
+
+		if (!enderecoRepository.existsById(codigo)) {
+			return ResponseEntity.notFound().build();
 		}
-		
+
 		enderecoRepository.deleteById(codigo);
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+		return ResponseEntity.noContent().build();
 	}
 	
 	@Operation(
