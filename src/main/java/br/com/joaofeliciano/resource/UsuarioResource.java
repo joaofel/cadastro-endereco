@@ -1,7 +1,6 @@
 package br.com.joaofeliciano.resource;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +33,8 @@ public class UsuarioResource {
 			description="Essa operação consulta usuario pelo codigo informado.")
 	@GetMapping("/{codigo}")
 	public ResponseEntity<Usuario> buscarByCodigo(@PathVariable Long codigo) {
-		Optional<Usuario> usuario = usuarioRepository.findById(codigo);
-		return usuario.isPresent() ? ResponseEntity.ok(usuario.get()) : ResponseEntity.notFound().build();
+		return usuarioRepository.findById(codigo)
+				.map(ResponseEntity::ok)
+				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 }

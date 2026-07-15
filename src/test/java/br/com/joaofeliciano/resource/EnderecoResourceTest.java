@@ -2,6 +2,7 @@ package br.com.joaofeliciano.resource;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -131,12 +132,14 @@ class EnderecoResourceTest {
 		mockMvc.perform(post("/endereco")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonInvalido))
-				.andExpect(status().isBadRequest());
+				.andExpect(status().isBadRequest())
+				// corpo customizado do CadastroEnderecoExceptionHandler (@ControllerAdvice ativo)
+				.andExpect(jsonPath("$[0].mensagemUsuario").exists());
 	}
 
 	@Test
 	void removerDeveRetornarNoContentQuandoExiste() throws Exception {
-		when(enderecoRepository.findById(1L)).thenReturn(Optional.of(enderecoComCodigo(1L)));
+		when(enderecoRepository.existsById(1L)).thenReturn(true);
 
 		mockMvc.perform(delete("/endereco/1"))
 				.andExpect(status().isNoContent());
@@ -145,11 +148,13 @@ class EnderecoResourceTest {
 	}
 
 	@Test
-	void removerDeveRetornarBadRequestQuandoNaoExiste() throws Exception {
-		when(enderecoRepository.findById(99L)).thenReturn(Optional.empty());
+	void removerDeveRetornarNotFoundQuandoNaoExiste() throws Exception {
+		when(enderecoRepository.existsById(99L)).thenReturn(false);
 
 		mockMvc.perform(delete("/endereco/99"))
-				.andExpect(status().isBadRequest());
+				.andExpect(status().isNotFound());
+
+		verify(enderecoRepository, never()).deleteById(any());
 	}
 
 	@Test

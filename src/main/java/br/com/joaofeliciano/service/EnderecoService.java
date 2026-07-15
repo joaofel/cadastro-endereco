@@ -20,8 +20,9 @@ public class EnderecoService {
 		Optional<Endereco> enderecoSalvo = enderecoRepository.findById(codigo);
 		
 		if (enderecoSalvo.isPresent()) {
-			BeanUtils.copyProperties(enderecoParametro, enderecoSalvo.get(), "codigo");
-			return enderecoRepository.save(enderecoParametro);
+			Endereco endereco = enderecoSalvo.get();
+			BeanUtils.copyProperties(enderecoParametro, endereco, "codigo");
+			return enderecoRepository.save(endereco);
 		}
 	
 		return null;
